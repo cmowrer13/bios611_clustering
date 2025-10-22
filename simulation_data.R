@@ -40,4 +40,4 @@ cluster_simulation <- function(n_values = 2:6,
 
 sim_results <- cluster_simulation()
 
-write.csv(sim_results, "generated_data/sim_results.csv")
+write.csv(sim_results, "generated_data/sim_results.csv", row.names = FALSE)
