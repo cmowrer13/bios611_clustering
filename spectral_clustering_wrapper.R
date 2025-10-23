@@ -34,6 +34,6 @@ spectral_clustering_fun <- function(d_threshold, nstart = 20, iter.max = 50) {
     
     km <- kmeans(U_norm, centers = k, nstart = nstart, iter.max = iter.max)
     
-    return(km$cluster)
+    list(cluster = km$cluster)
   }
 }

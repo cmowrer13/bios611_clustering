@@ -1,5 +1,3 @@
-library(plotly)
-
 generate_shell_clusters <- function(n_shells, k_per_shell, max_radius, noise_sd = 0.1){
   
   if (n_shells <1 | k_per_shell <1) stop("n)shells and k_per_shell must be positive integers")
