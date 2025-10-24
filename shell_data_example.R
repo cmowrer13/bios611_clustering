@@ -1,4 +1,6 @@
 library(htmlwidgets)
+library(tidyverse)
+library(plotly)
 
 source("generate_shell_data.R")
 
