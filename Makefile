@@ -1,6 +1,6 @@
 .PHONY: clean
 
-all: report.html
+all: report.html figures/shell_data_example.html
 
 clean:
 	rm -rf generated_data/*
