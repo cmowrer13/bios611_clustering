@@ -17,6 +17,15 @@ spectral_clustering_fun <- function(d_threshold, nstart = 20, iter.max = 50) {
     degs <- rowSums(A)
     D <- diag(degs)
     
+    singletons <- which(degs == 0)
+    if (length(singletons) > 0) {
+      for (i in singletons) {
+        nearest <- order(dmat[i, ])[2:(4 + 1)]
+        A[i, nearest] <- 1
+        A[nearest, i] <- 1
+      }
+    }
+    
     inv_sqrt_deg <- rep(0, n)
     nonzero <- degs > 0
     inv_sqrt_deg[nonzero] <- 1 / sqrt(degs[nonzero])

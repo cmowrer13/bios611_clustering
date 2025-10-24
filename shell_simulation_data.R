@@ -1,5 +1,6 @@
 library(cluster)
 
+source("generate_shell_data.R")
 source("spectral_clustering_wrapper.R")
 
 shell_simulation <- function(max_radii = seq(10, 1, by = -1), 
@@ -7,9 +8,9 @@ shell_simulation <- function(max_radii = seq(10, 1, by = -1),
                              k_per_shell = 100,
                              noise_sd = 0.1,
                              d_threshold = 1,
-                             nstart = 20,
-                             iter.max = 50,
-                             B = 20){
+                             nstart = 10,
+                             iter.max = 25,
+                             B = 5){
   
   results <- list()
   
@@ -28,32 +29,16 @@ shell_simulation <- function(max_radii = seq(10, 1, by = -1),
     
     dat_mat <- as.matrix(dat[, c("X1", "X2", "X3")])
     
-    gap <- tryCatch({
-      clusGap(dat_mat,
-              FUN = spec_fun,
-              K.max = n_shells + 3,
-              B = B,
-              verbose = FALSE)
-    }, error = function(e) {
-      message("clusGap failed for max_radius = ", r, ": ", e$message)
-      return(NULL)
-    })
+    gap <- clusGap(dat_mat,
+                   FUN = spec_fun,
+                   K.max = n_shells,
+                   B = B,
+                   verbose = FALSE)
     
-    if (is.null(gap) || is.atomic(gap)) {
-      message("gap object invalid or atomic at max_radius = ", r)
-      if (!is.null(gap)) print(str(gap))
-      best_k <- NA
-    } else if (is.null(gap$Tab)) {
-      message("gap object missing Tab at max_radius = ", r)
-      print(str(gap))
-      best_k <- NA
-    } else {
       best_k <- maxSE(
         gap$Tab[, "gap"],
         gap$Tab[, "SE.sim"],
-        method = "Tibs2001SEmax"
-      )
-    }
+        method = "Tibs2001SEmax")
     
     results[[length(results) + 1]] <- data.frame(
       max_radius = r,
@@ -65,3 +50,5 @@ shell_simulation <- function(max_radii = seq(10, 1, by = -1),
 }
 
 shell_results <- shell_simulation()
+
+write.csv(shell_results, "generated_data/shell_sim_results.csv")
